@@ -37,13 +37,31 @@
            // Global camera object
            var camera;
 
-           // Global mesh object of the triangle
-           var triangleMesh;
-           var triangleMesh2;
-           var triangleMesh3;
+           // Global mesh object of the trees
+           var triangleMeshTree;
+           var triangleMeshTree2;
+           var triangleMeshTree3;
+           var triangleMeshTree4;
+           var triangleMeshTree5;
+           var triangleMeshTree6;
+           var triangleMeshTree7;
+           var triangleMeshTree8;
+           var triangleMeshTree9;
+
 
            // Global mesh object of the square
            var squareMesh;
+
+           // Global mesh object of the moon
+           var circleMeshMoon2;
+
+           // Global mesh object of the cloud
+           var circleMeshCloud;
+
+           // Global values for moving objects
+           let goLeftMoon = 0;
+           let driveLeftCar = 0;
+           let flyLeftCloud = 0;
 
            // Initialize the scene
            initializeScene();
@@ -126,13 +144,13 @@
 
 
                // ---------------------------------------------------------------------------
-               // TREE
+               // TREES
 
-               var triangleGeometry = new THREE.Geometry();
-               triangleGeometry.vertices.push(new THREE.Vector3( 0.0,  1.0, 0.0));
-               triangleGeometry.vertices.push(new THREE.Vector3(-1.0, -1.0, 0.0));
-               triangleGeometry.vertices.push(new THREE.Vector3( 1.0, -1.0, 0.0));
-               triangleGeometry.faces.push(new THREE.Face3(0, 1, 2));
+               var triangleGeometryTree = new THREE.Geometry();
+               triangleGeometryTree.vertices.push(new THREE.Vector3( 0.0,  1.0, 0.0));
+               triangleGeometryTree.vertices.push(new THREE.Vector3(-1.0, -1.0, 0.0));
+               triangleGeometryTree.vertices.push(new THREE.Vector3( 1.0, -1.0, 0.0));
+               triangleGeometryTree.faces.push(new THREE.Face3(0, 1, 2));
 
                // To color the surface, a material has to be created. If all vertices shall have
                // different colors, we need to set the vertex colors of each face. The colors in
@@ -140,9 +158,9 @@
                // Unfortunately, the canvas renderer doesn't support vertex yolors (yet [Three.js,
                // release 50]). Either you accept a white face color, or set another face color.
 
-               triangleGeometry.faces[0].vertexColors[0] = new THREE.Color(0xFF0000);
-               triangleGeometry.faces[0].vertexColors[1] = new THREE.Color(0x00FF00);
-               triangleGeometry.faces[0].vertexColors[2] = new THREE.Color(0x0000FF);
+               triangleGeometryTree.faces[0].vertexColors[0] = new THREE.Color(0x99CA12);
+               triangleGeometryTree.faces[0].vertexColors[1] = new THREE.Color(0x2B882D);
+               triangleGeometryTree.faces[0].vertexColors[2] = new THREE.Color(0x046B07);
 
                // To activate the vertex color, we have to set 'vertexColors' attribute to
                // 'THREE.VertexColors'. Otherwise they won't be displayed.
@@ -154,26 +172,26 @@
                // rendered (backface culling). But this performance optimization sometimes leads
                // to wholes in the surface. When this happens in your surface, simply set
                // 'doubleSided' to 'true'.
-               var triangleMaterial = new THREE.MeshBasicMaterial({
+               var triangleMaterialTree = new THREE.MeshBasicMaterial({
                    vertexColors:THREE.VertexColors,
                    side:THREE.DoubleSide
                });
 
                // Create a mesh and insert the geometry and the material. Translate the whole mesh
                // by -1.5 on the x axis and by 4 on the z axis. Finally add the mesh to the scene.
-               triangleMesh = new THREE.Mesh(triangleGeometry, triangleMaterial);
-               triangleMesh.position.set(-1.5, 3.0, 4.0);
-               scene.add(triangleMesh);
+               triangleMeshTree = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree.position.set(-1.5, 2.0, 4.0);
+               scene.add(triangleMeshTree);
 
-               triangleMesh2 = new THREE.Mesh(triangleGeometry, triangleMaterial);
-               triangleMesh2.position.set(-1.5, 2.0, 4.0);
-               triangleMesh2.rotation.y += 0.4;
-               scene.add(triangleMesh2);
+               triangleMeshTree2 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree2.position.set(-1.5, 1.0, 4.0);
+               triangleMeshTree2.rotation.y += 0.4;
+               scene.add(triangleMeshTree2);
 
-               triangleMesh3 = new THREE.Mesh(triangleGeometry, triangleMaterial);
-               triangleMesh3.position.set(-1.5, 1.0, 4.0);
-               triangleMesh3.rotation.y += 0.8;
-               scene.add(triangleMesh3);
+               triangleMeshTree3 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree3.position.set(-1.5, 0.0, 4.0);
+               triangleMeshTree3.rotation.y += 0.8;
+               scene.add(triangleMeshTree3);
 
                var squareGeometryTree = new THREE.Geometry();
                squareGeometryTree.vertices.push(new THREE.Vector3(-0.2,  0.2, 0.0));
@@ -184,16 +202,56 @@
 			   squareGeometryTree.faces.push(new THREE.Face3(0, 2, 3));
 
                var squareMaterialTree = new THREE.MeshBasicMaterial({
-                   color:0x8080FF,
+                   color:0x60480B,
                    side:THREE.DoubleSide
                });
 
                squareMeshTree = new THREE.Mesh(squareGeometryTree, squareMaterialTree);
                squareMeshTree.position.set(0.0, -1.2, 0.0);
                squareMeshTree.rotation.y += 0.2;
-               triangleMesh3.add(squareMeshTree);
+               triangleMeshTree3.add(squareMeshTree);
 
-               // TREE
+
+               triangleMeshTree4 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree4.position.set(4.5, 2.0, 4.0);
+               scene.add(triangleMeshTree4);
+
+               triangleMeshTree5 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree5.position.set(4.5, 1.0, 4.0);
+               triangleMeshTree5.rotation.y += 0.4;
+               scene.add(triangleMeshTree5);
+
+               triangleMeshTree6 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree6.position.set(4.5, 0.0, 4.0);
+               triangleMeshTree6.rotation.y += 0.8;
+               scene.add(triangleMeshTree6);
+
+               squareMeshTree2 = new THREE.Mesh(squareGeometryTree, squareMaterialTree);
+               squareMeshTree2.position.set(0.0, -1.2, 0.0);
+               squareMeshTree2.rotation.y += 0.2;
+               triangleMeshTree6.add(squareMeshTree2);
+
+
+               triangleMeshTree7 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree7.position.set(7.5, 2.0, 4.0);
+               scene.add(triangleMeshTree7);
+
+               triangleMeshTree8 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree8.position.set(7.5, 1.0, 4.0);
+               triangleMeshTree8.rotation.y += 0.4;
+               scene.add(triangleMeshTree8);
+
+               triangleMeshTree9 = new THREE.Mesh(triangleGeometryTree, triangleMaterialTree);
+               triangleMeshTree9.position.set(7.5, 0.0, 4.0);
+               triangleMeshTree9.rotation.y += 0.8;
+               scene.add(triangleMeshTree9);
+
+               squareMeshTree3 = new THREE.Mesh(squareGeometryTree, squareMaterialTree);
+               squareMeshTree3.position.set(0.0, -1.2, 0.0);
+               squareMeshTree3.rotation.y += 0.2;
+               triangleMeshTree9.add(squareMeshTree3);
+
+               // TREES
                // ---------------------------------------------------------------
 
                // The creation of the square is done in the same way as the triangle, except of the
@@ -207,33 +265,82 @@
                // ------------------------------------------------------
                // HOUSE
 
-               var squareGeometry = new THREE.Geometry();
-               squareGeometry.vertices.push(new THREE.Vector3(-1.0,  1.0, 0.0));
-               squareGeometry.vertices.push(new THREE.Vector3( 1.0,  1.0, 0.0));
-               squareGeometry.vertices.push(new THREE.Vector3( 1.0, -1.0, 0.0));
-               squareGeometry.vertices.push(new THREE.Vector3(-1.0, -1.0, 0.0));
-               squareGeometry.faces.push(new THREE.Face3(0, 1, 2));
-			   squareGeometry.faces.push(new THREE.Face3(0, 2, 3));
+               var squareGeometryHouse = new THREE.Geometry();
+               squareGeometryHouse.vertices.push(new THREE.Vector3(-1.0,  1.0, 0.0));
+               squareGeometryHouse.vertices.push(new THREE.Vector3( 1.0,  1.0, 0.0));
+               squareGeometryHouse.vertices.push(new THREE.Vector3( 1.0, -1.0, 0.0));
+               squareGeometryHouse.vertices.push(new THREE.Vector3(-1.0, -1.0, 0.0));
+               squareGeometryHouse.faces.push(new THREE.Face3(0, 1, 2));
+			   squareGeometryHouse.faces.push(new THREE.Face3(0, 2, 3));
 
-               // The square gets a new face color. In contrast to vertex colors means face color,
-               // that all vertices have the same color or in other words, the whole face has the
-               // same color (no color gradients).
-
-               // Create a light blue basic material and activate the 'doubleSided' attribute.
-               var squareMaterial = new THREE.MeshBasicMaterial({
-                   color:0x8080FF,
+               var squareMaterialHouse = new THREE.MeshBasicMaterial({
+                   color:0xF1DB6E,
                    side:THREE.DoubleSide
                });
 
-               // Create a mesh and insert the geometry and the material. Translate the whole mesh
-               // by 1.5 on the x axis and by 4 on the z axis and add the mesh to the scene.
-               squareMesh = new THREE.Mesh(squareGeometry, squareMaterial);
-               squareMesh.position.set(1.5, 0.0, 4.0);
+               squareMeshHouse = new THREE.Mesh(squareGeometryHouse, squareMaterialHouse);
+               squareMeshHouse.position.set(1.5, 0.0, 4.0);
 
-               triangleMeshHouse = new THREE.Mesh(triangleGeometry, triangleMaterial)
-               triangleMeshHouse.position.set(0.0, 2.0, 0.0);
-               squareMesh.add(triangleMeshHouse);
-               scene.add(squareMesh);
+
+               var triangleGeometryRoof = new THREE.Geometry();
+               triangleGeometryRoof.vertices.push(new THREE.Vector3( 0.0,  1.0, 0.0));
+               triangleGeometryRoof.vertices.push(new THREE.Vector3(-1.0, -1.0, 0.0));
+               triangleGeometryRoof.vertices.push(new THREE.Vector3( 1.0, -1.0, 0.0));
+               triangleGeometryRoof.faces.push(new THREE.Face3(0, 1, 2));
+
+               triangleGeometryRoof.faces[0].vertexColors[0] = new THREE.Color(0x080F4E);
+               triangleGeometryRoof.faces[0].vertexColors[1] = new THREE.Color(0x7B2A0B);
+               triangleGeometryRoof.faces[0].vertexColors[2] = new THREE.Color(0x7B2A0B);
+
+               var triangleMaterialRoof = new THREE.MeshBasicMaterial({
+                   vertexColors:THREE.VertexColors,
+                   side:THREE.DoubleSide
+               });
+
+               triangleMeshRoof = new THREE.Mesh(triangleGeometryRoof, triangleMaterialRoof)
+               triangleMeshRoof.position.set(0.0, 2.0, 0.0);
+               squareMeshHouse.add(triangleMeshRoof);
+               scene.add(squareMeshHouse);
+
+               var squareGeometryDoor = new THREE.Geometry();
+               squareGeometryDoor.vertices.push(new THREE.Vector3(-0.4,  0.5, 0.0));
+               squareGeometryDoor.vertices.push(new THREE.Vector3( 0.4,  0.5, 0.0));
+               squareGeometryDoor.vertices.push(new THREE.Vector3( 0.4, -0.5, 0.0));
+               squareGeometryDoor.vertices.push(new THREE.Vector3(-0.4, -0.5, 0.0));
+               squareGeometryDoor.faces.push(new THREE.Face3(0, 1, 2));
+			   squareGeometryDoor.faces.push(new THREE.Face3(0, 2, 3));
+
+               var squareMaterialDoor = new THREE.MeshBasicMaterial({
+                   color:0xCE1717,
+                   side:THREE.DoubleSide
+               });
+
+               squareMeshDoor = new THREE.Mesh(squareGeometryDoor, squareMaterialDoor);
+               squareMeshDoor.position.set(0.0, -0.5, 0.0);
+               squareMeshHouse.add(squareMeshDoor);
+
+
+               var squareGeometryWindow = new THREE.Geometry();
+               squareGeometryWindow.vertices.push(new THREE.Vector3(-0.3,  0.3, 0.0));
+               squareGeometryWindow.vertices.push(new THREE.Vector3( 0.3,  0.3, 0.0));
+               squareGeometryWindow.vertices.push(new THREE.Vector3( 0.3, -0.3, 0.0));
+               squareGeometryWindow.vertices.push(new THREE.Vector3(-0.3, -0.3, 0.0));
+               squareGeometryWindow.faces.push(new THREE.Face3(0, 1, 2));
+			   squareGeometryWindow.faces.push(new THREE.Face3(0, 2, 3));
+
+               var squareMaterialWindow = new THREE.MeshBasicMaterial({
+                   color:0xB5E3E3,
+                   side:THREE.DoubleSide
+               });
+
+               squareMeshWindow = new THREE.Mesh(squareGeometryWindow, squareMaterialWindow);
+               squareMeshWindow.position.set(0.4, 0.5, 0.0);
+               squareMeshHouse.add(squareMeshWindow);
+
+               squareMeshWindow2 = new THREE.Mesh(squareGeometryWindow, squareMaterialWindow);
+               squareMeshWindow2.position.set(-0.4, 0.5, 0.0);
+               squareMeshHouse.add(squareMeshWindow2);
+
 
                // HOUSE
                // -------------------------------------------------------
@@ -242,26 +349,108 @@
                // -------------------------------------------------------
                // CAR
 
-               carMesh = new THREE.Mesh(squareGeometry, squareMaterial);
+               var squareGeometryCar = new THREE.Geometry();
+               squareGeometryCar.vertices.push(new THREE.Vector3(-3.0,  1.0, 0.0));
+               squareGeometryCar.vertices.push(new THREE.Vector3( 3.0,  1.0, 0.0));
+               squareGeometryCar.vertices.push(new THREE.Vector3( 3.0, -1.0, 0.0));
+               squareGeometryCar.vertices.push(new THREE.Vector3(-3.0, -1.0, 0.0));
+               squareGeometryCar.faces.push(new THREE.Face3(0, 1, 2));
+			   squareGeometryCar.faces.push(new THREE.Face3(0, 2, 3));
+
+               var squareMaterialCar = new THREE.MeshBasicMaterial({
+                   color:0xA11A1A,
+                   side:THREE.DoubleSide
+               });
+
+               carMesh = new THREE.Mesh(squareGeometryCar, squareMaterialCar);
                carMesh.position.set(-10, -5.0, 0);
 
-               var circleGeometry = new THREE.CircleGeometry(0.3, 32 );
+               var squareGeometryCar2 = new THREE.Geometry();
+               squareGeometryCar2.vertices.push(new THREE.Vector3(-2.0,  0.8, 0.0));
+               squareGeometryCar2.vertices.push(new THREE.Vector3( 2.0,  0.8, 0.0));
+               squareGeometryCar2.vertices.push(new THREE.Vector3( 2.0, -0.8, 0.0));
+               squareGeometryCar2.vertices.push(new THREE.Vector3(-2.0, -0.8, 0.0));
+               squareGeometryCar2.faces.push(new THREE.Face3(0, 1, 2));
+			   squareGeometryCar2.faces.push(new THREE.Face3(0, 2, 3));
+
+               carMesh2 = new THREE.Mesh(squareGeometryCar2, squareMaterialCar);
+               carMesh2.position.set(0.0, 1.5, 0.0);
+               carMesh.add(carMesh2);
+
+               var circleGeometry = new THREE.CircleGeometry(0.5, 32 );
                var circleMaterial = new THREE.MeshBasicMaterial({
                    color: 0xB8B3B3,
                    side: THREE.DoubleSide
                });
                circleMesh = new THREE.Mesh(circleGeometry, circleMaterial);
-               circleMesh.position.set(0.5, -1, 0.0);
+               circleMesh.position.set(1.2, -1.2, 0.0);
                carMesh.add(circleMesh);
 
                circleMesh2 = new THREE.Mesh(circleGeometry, circleMaterial);
-               circleMesh2.position.set(-0.5, -1, 0,0);
+               circleMesh2.position.set(-1.2, -1.2, 0,0);
                carMesh.add(circleMesh2);
 
                scene.add(carMesh);
 
                // CAR
                // -------------------------------------------------------
+
+
+               // -------------------------------------------------------
+               // MOON
+
+               var circleGeometryMoon = new THREE.CircleGeometry(1.8, 32 );
+               var circleMaterialMoon = new THREE.MeshBasicMaterial({
+                   color: 0xB8B3B3,
+                   side: THREE.DoubleSide
+               });
+
+               var circleMaterialMoon2 = new THREE.MeshBasicMaterial({
+                   color: 0x000000,
+                   side: THREE.DoubleSide
+               });
+
+               circleMeshMoon = new THREE.Mesh(circleGeometryMoon, circleMaterialMoon);
+               circleMeshMoon.position.set(-8.0, 5.0, 0.0);
+
+               circleMeshMoon2 = new THREE.Mesh(circleGeometryMoon, circleMaterialMoon2);
+               circleMeshMoon2.position.set(-6.8, 5.0, 0.0);
+               scene.add(circleMeshMoon);
+               scene.add(circleMeshMoon2);
+
+               // MOON
+               // -------------------------------------------------------
+
+
+
+
+               // CLOUD
+               // -------------------------------------------------------
+
+               var circleGeometryCloud = new THREE.CircleGeometry(1.0, 32);
+               var circleMaterialCloud = new THREE.MeshBasicMaterial({
+                   color: 0xACE4E3,
+                   side: THREE.DoubleSide
+               });
+
+               circleMeshCloud = new THREE.Mesh(circleGeometryCloud, circleMaterialCloud);
+               circleMeshCloud.position.set(-3.0, 6.0, 0.0);
+
+               circleMeshCloud2 = new THREE.Mesh(circleGeometryCloud, circleMaterialCloud);
+               circleMeshCloud2.position.set(1.2, 0.0, 0.0);
+
+               circleMeshCloud3 = new THREE.Mesh(circleGeometryCloud, circleMaterialCloud);
+               circleMeshCloud3.position.set(-1.2, 0.0, 0.0);
+
+               circleMeshCloud.add(circleMeshCloud2);
+               circleMeshCloud.add(circleMeshCloud3);
+               
+               scene.add(circleMeshCloud);
+
+               // CLOUD
+               // -------------------------------------------------------
+
+
            }
 
            /**
@@ -272,13 +461,64 @@
                // rotation of the square mesh.
            
                // Increase the y rotation of the triangle
-               triangleMesh.rotation.y += 0.1;
-               triangleMesh2.rotation.y += 0.1;
-               triangleMesh3.rotation.y += 0.1;
+               triangleMeshTree.rotation.y += 0.1;
+               triangleMeshTree2.rotation.y += 0.1;
+               triangleMeshTree3.rotation.y += 0.1;
+               triangleMeshTree4.rotation.y += 0.1;
+               triangleMeshTree5.rotation.y += 0.1;
+               triangleMeshTree6.rotation.y += 0.1;
+               triangleMeshTree7.rotation.y += 0.1;
+               triangleMeshTree8.rotation.y += 0.1;
+               triangleMeshTree9.rotation.y += 0.1;
 
-               // Decrease the x rotation of the square
-               squareMesh.rotation.x -= 0.075;
-               carMesh.position.x += 0.015;
+                // Car move
+                if (carMesh.position.x > 12.0){
+                    driveLeftCar = 1;
+                }
+
+                else if(carMesh.position.x < -12){
+                    driveLeftCar = 0;
+                }
+                
+                if (driveLeftCar == 1){
+                    carMesh.position.x -= 0.02;
+                }
+                else{
+                    carMesh.position.x += 0.02;
+                }
+
+               // Moon move
+               if (circleMeshMoon2.position.x > -4.5){
+                   goLeftMoon = 1;
+                //    circleMeshMoon2.position.set(-6.8, 5.0, 0.0);
+               }
+
+               else if (circleMeshMoon2.position.x <= -6.8){
+                   goLeftMoon = 0;
+               }
+
+               if (goLeftMoon == 1){
+                    circleMeshMoon2.position.x -= 0.0015;
+               }
+               else{
+                   circleMeshMoon2.position.x += 0.0015;
+               }
+
+               // Cloud move
+               if (circleMeshCloud.position.x > 9.0){
+                   flyLeftCloud = 1;
+               }
+               else if (circleMeshCloud.position.x < -3.0){
+                   flyLeftCloud = 0;
+               }
+
+               if (flyLeftCloud == 1){
+                   circleMeshCloud.position.x -= 0.004;
+               }
+               else{
+                   circleMeshCloud.position.x += 0.004;
+               }
+
 
                // Define the function, which is called by the browser supported timer loop. If the
                // browser tab is not visible, the animation is paused. So 'animateScene()' is called

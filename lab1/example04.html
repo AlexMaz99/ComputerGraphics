@@ -40,7 +40,13 @@
            var pyramidMesh; 
 
            // Global mesh object of the cube 
-           var cubeMesh; 
+           var cubeMesh;
+
+           // Global mesh object of the tree
+           var pyramidMeshTree;
+           var pyramidMeshTree2;
+           var pyramidMeshTree3;
+           var cubeMeshTree; 
 
            // Initialize the scene 
            initializeScene(); 
@@ -105,7 +111,7 @@
                // the scene. 
                // After definition, the camera has to be added to the scene. 
                camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100); 
-               camera.position.set(0, 0, 10); 
+               camera.position.set(0, 0, 16); 
                camera.lookAt(scene.position); 
                scene.add(camera); 
 
@@ -120,7 +126,7 @@
                // Parameter 5 'openEnded': Allows to have open ends ('true') or closed ends ('false') 
                //                          of the cylindern. Since the pyramid shall have a bottom 
                //                          face, we set it to 'false'. 
-               var pyramidGeometry = new THREE.CylinderGeometry(0.0, 1.5, 1.5, 4, false); 
+               var pyramidGeometry = new THREE.CylinderGeometry(0.4, 1.5, 3.0, 60, false); 
 
                // Coloring the faces with vertex colors is a bit tricky, but allows us to see how to 
                // loop through the faces and check whether they have three or four vertices. 
@@ -134,19 +140,19 @@
                // colors. They are only supported by the WebGL renderer 
                for(i = 0; i < pyramidGeometry.faces.length; i++){ 
                    if(pyramidGeometry.faces[i] instanceof THREE.Face4){ 
-                       pyramidGeometry.faces[i].vertexColors[0] = new THREE.Color(0xFF0000); 
+                       pyramidGeometry.faces[i].vertexColors[0] = new THREE.Color(0xDACB18); 
                        if((i % 2) == 0){ 
-                           pyramidGeometry.faces[i].vertexColors[1] = new THREE.Color(0x00FF00); 
-                           pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0x0000FF); 
+                           pyramidGeometry.faces[i].vertexColors[1] = new THREE.Color(0xD17E00); 
+                           pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0x000000); 
                        } else { 
-                           pyramidGeometry.faces[i].vertexColors[1] = new THREE.Color(0x0000FF); 
-                           pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0x00FF00); 
+                           pyramidGeometry.faces[i].vertexColors[1] = new THREE.Color(0x000000); 
+                           pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0xD17E00); 
                        } 
-                       pyramidGeometry.faces[i].vertexColors[3] = new THREE.Color(0xFF0000); 
+                       pyramidGeometry.faces[i].vertexColors[3] = new THREE.Color(0xDACB18); 
                    } else { 
-                       pyramidGeometry.faces[i].vertexColors[0] = new THREE.Color(0xFF0000); 
-                       pyramidGeometry.faces[i].vertexColors[1] = new THREE.Color(0x00FF00); 
-                       pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0x0000FF); 
+                       pyramidGeometry.faces[i].vertexColors[0] = new THREE.Color(0xDACB18); 
+                       pyramidGeometry.faces[i].vertexColors[1] = new THREE.Color(0x000000); 
+                       pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0xD17E00); 
                    } 
                } 
 
@@ -182,24 +188,109 @@
                // THREE.MeshBasicMaterial. 
 
                // Define six colored materials 
-               var cubeMaterials = [ 
-                   new THREE.MeshBasicMaterial({color:0xFF0000}), 
-                   new THREE.MeshBasicMaterial({color:0x00FF00}), 
-                   new THREE.MeshBasicMaterial({color:0x0000FF}), 
-                   new THREE.MeshBasicMaterial({color:0xFFFF00}), 
-                   new THREE.MeshBasicMaterial({color:0x00FFFF}), 
-                   new THREE.MeshBasicMaterial({color:0xFFFFFF}) 
-               ]; 
+               for (i = 0; i < cubeGeometry.faces.length; i++) {
+                    if (cubeGeometry.faces[i] instanceof THREE.Face4) {
+                    cubeGeometry.faces[i].vertexColors[0] = new THREE.Color(0xDACB18);
+                        if (i % 2 == 0) {
+                            cubeGeometry.faces[i].vertexColors[1] = new THREE.Color(0xA31313);
+                            cubeGeometry.faces[i].vertexColors[2] = new THREE.Color(0x000000);
+                        } else {
+                            cubeGeometry.faces[i].vertexColors[1] = new THREE.Color(0x000000);
+                            cubeGeometry.faces[i].vertexColors[2] = new THREE.Color(0xA31313);
+                        }
+                        cubeGeometry.faces[i].vertexColors[3] = new THREE.Color(0xFF0000);
+                    } else {
+                    cubeGeometry.faces[i].vertexColors[0] = new THREE.Color(0xDACB18);
+                    cubeGeometry.faces[i].vertexColors[1] = new THREE.Color(0xA31313);
+                    cubeGeometry.faces[i].vertexColors[2] = new THREE.Color(0x000000);
+                    }
+                } 
 
                // Create a MeshFaceMaterial, which allows the cube to have different materials on 
                // each face 
-               var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials); 
+               const cubeMaterials = new THREE.MeshBasicMaterial({
+                    vertexColors: THREE.VertexColors,
+                    side: THREE.DoubleSide,
+                });
 
                // Create a mesh and insert the geometry and the material. Translate the whole mesh 
                // by 1.5 on the x axis and by 4 on the z axis and add the mesh to the scene. 
-               cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial); 
+               cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterials); 
                cubeMesh.position.set(1.5, 0.0, 4.0); 
                scene.add(cubeMesh); 
+
+
+               // ---------------------------------------------------------------
+               // TREE
+                
+               var pyramidGeometryTree = new THREE.CylinderGeometry(0.0, 1.5, 2.0, 60, false); 
+               for(i = 0; i < pyramidGeometryTree.faces.length; i++){ 
+                   if(pyramidGeometryTree.faces[i] instanceof THREE.Face4){ 
+                       pyramidGeometryTree.faces[i].vertexColors[0] = new THREE.Color(0x0E941A); 
+                       if((i % 2) == 0){ 
+                           pyramidGeometryTree.faces[i].vertexColors[1] = new THREE.Color(0x10AE1E); 
+                           pyramidGeometryTree.faces[i].vertexColors[2] = new THREE.Color(0x0B4510); 
+                       } else { 
+                           pyramidGeometryTree.faces[i].vertexColors[1] = new THREE.Color(0x0B4510); 
+                           pyramidGeometryTree.faces[i].vertexColors[2] = new THREE.Color(0x10AE1E); 
+                       } 
+                       pyramidGeometryTree.faces[i].vertexColors[3] = new THREE.Color(0x0E941A); 
+                   } else { 
+                       pyramidGeometryTree.faces[i].vertexColors[0] = new THREE.Color(0x0E941A); 
+                       pyramidGeometryTree.faces[i].vertexColors[1] = new THREE.Color(0x0B4510); 
+                       pyramidGeometryTree.faces[i].vertexColors[2] = new THREE.Color(0x10AE1E); 
+                   } 
+               }
+
+               var pyramidMaterialTree = new THREE.MeshBasicMaterial({ 
+                   vertexColors:THREE.VertexColors, 
+                   side:THREE.DoubleSide 
+               }); 
+                
+               pyramidMeshTree = new THREE.Mesh(pyramidGeometryTree, pyramidMaterialTree); 
+               pyramidMeshTree.position.set(-8, 2.0, 0.0); 
+
+               pyramidMeshTree2 = new THREE.Mesh(pyramidGeometryTree, pyramidMaterialTree); 
+               pyramidMeshTree2.position.set(-8, 1.0, 0.0); 
+
+               pyramidMeshTree3 = new THREE.Mesh(pyramidGeometryTree, pyramidMaterialTree); 
+               pyramidMeshTree3.position.set(-8, 0.0, 0.0); 
+
+               scene.add(pyramidMeshTree); 
+               scene.add(pyramidMeshTree2); 
+               scene.add(pyramidMeshTree3);
+
+               var cubeGeometryTree = new THREE.CubeGeometry(0.4, 0.5, 0.4);  
+
+               for (i = 0; i < cubeGeometryTree.faces.length; i++) {
+                    if (cubeGeometryTree.faces[i] instanceof THREE.Face4) {
+                    cubeGeometryTree.faces[i].vertexColors[0] = new THREE.Color(0x704409);
+                        if (i % 2 == 0) {
+                            cubeGeometryTree.faces[i].vertexColors[1] = new THREE.Color(0x412A0A);
+                            cubeGeometryTree.faces[i].vertexColors[2] = new THREE.Color(0xC67B15);
+                        } else {
+                            cubeGeometryTree.faces[i].vertexColors[1] = new THREE.Color(0xC67B15);
+                            cubeGeometryTree.faces[i].vertexColors[2] = new THREE.Color(0x412A0A);
+                        }
+                        cubeGeometryTree.faces[i].vertexColors[3] = new THREE.Color(0x704409);
+                    } else {
+                    cubeGeometryTree.faces[i].vertexColors[0] = new THREE.Color(0x704409);
+                    cubeGeometryTree.faces[i].vertexColors[1] = new THREE.Color(0x412A0A);
+                    cubeGeometryTree.faces[i].vertexColors[2] = new THREE.Color(0xC67B15);
+                    }
+                }
+
+                const cubeMaterialsTree = new THREE.MeshBasicMaterial({
+                    vertexColors: THREE.VertexColors,
+                    side: THREE.DoubleSide,
+                });
+
+               cubeMeshTree = new THREE.Mesh(cubeGeometryTree, cubeMaterialsTree); 
+               cubeMeshTree.position.set(-8, -1.2, 0.0); 
+               scene.add(cubeMeshTree);
+
+               // TREE
+               // ---------------------------------------------------------------
            } 
 
            /** 
@@ -208,6 +299,13 @@
            function animateScene(){ 
                // Increase the y rotation of the triangle 
                pyramidMesh.rotation.y += 0.1; 
+
+               // Rotation of tree
+               pyramidMeshTree.rotation.y += 0.1;
+               pyramidMeshTree2.rotation.y += 0.1;
+               pyramidMeshTree3.rotation.y += 0.1;
+               cubeMeshTree.rotation.y += 0.1;
+
 
                // Decrease the rotation of the cube 
                cubeMesh.rotateOnAxis(new THREE.Vector3(1, 1, 1).normalize(), 0.075); 
