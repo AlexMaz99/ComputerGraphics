@@ -123,6 +123,7 @@
 
         // cone
         var coneGeometry = new THREE.ConeGeometry(20, 30, 300);
+        coneGeometry.translate(0, -15, 0);
         var coneMaterial = new THREE.MeshLambertMaterial({
             color:0xfcc603,
             transparent: true,
@@ -131,8 +132,10 @@
 
         var cone = new THREE.Mesh(coneGeometry, coneMaterial);
         cone.position.x = 16;
-        cone.position.y = 15;
+        cone.position.y = 32;
         cone.position.z = 0;
+
+        var coneRotationSpeed = 0;
 
         scene.add(cone);
 
@@ -165,7 +168,7 @@
 
         // spotLight for cone
         var spotLight2 = new THREE.SpotLight(0xffffff);
-        spotLight2.position.set(20, 90, 0);
+        spotLight2.position.set(0, 60, 0);
         spotLight2.castShadow = true;  
 		spotLight2.angle = 0.22;
 
@@ -261,7 +264,10 @@
             icosahedron.rotation.y += 2 * controls.rotationSpeed;
 
             // rotate cone
-            cone.rotation.y += controls.rotationSpeed;
+            coneRotationSpeed += 0.02;
+            cone.rotation.x = 0.12 * Math.cos(coneRotationSpeed);
+            cone.rotation.z = 0.12 * Math.sin(coneRotationSpeed);
+            // cone.rotation.y += controls.rotationSpeed;
 
             // bounce the sphere up and down
             step += controls.bouncingSpeed;
