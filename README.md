@@ -4,3 +4,4 @@ Tasks from Introduction to Computer Graphics classes at the AGH University of Sc
 
 1. [Drawing](../master/lab1)
 2. [Lighting](../master/lab2)
+3. [Texture](../master/lab3)
