@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - FBX loader</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+
+	<body>
+		<div id="info">
+			<a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> - FBXLoader<br />
+			Character and animation from <a href="https://www.mixamo.com/" target="_blank" rel="noopener">Mixamo</a>
+		</div>
+
+		<script type="module">
+
+			import * as THREE from '../build/three.module.js';
+
+			import Stats from './jsm/libs/stats.module.js';
+
+			import { OrbitControls } from './jsm/controls/OrbitControls.js';
+			import { FBXLoader } from './jsm/loaders/FBXLoader.js';
+
+			var container, stats, controls;
+			var camera, scene, renderer, light;
+
+			var clock = new THREE.Clock();
+
+			var mixer;
+			var mixer2;
+			var mixer3;
+			var mixer4;
+			var mixer5;
+
+			var action;
+			var action2;
+			var action3;
+			var action4;
+			var action5;
+
+			var wall;
+			var wall2;
+			var wall3;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera.position.set( 200, 100, 600 );
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0xa0a0a0 );
+				scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
+
+				light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+				light.position.set( 0, 200, 0 );
+				scene.add( light );
+
+				light = new THREE.DirectionalLight( 0xffffff );
+				light.position.set( 0, 200, 100 );
+				light.castShadow = true;
+				light.shadow.camera.top = 180;
+				light.shadow.camera.bottom = - 100;
+				light.shadow.camera.left = - 120;
+				light.shadow.camera.right = 120;
+				scene.add( light );
+
+				// scene.add( new CameraHelper( light.shadow.camera ) );
+
+				// ground
+				var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x000000, depthWrite: false } ) );
+				mesh.rotation.x = - Math.PI / 2;
+				mesh.receiveShadow = true;
+				scene.add( mesh );
+
+				var grid = new THREE.GridHelper( 2000, 20, 0xFFFFFF, 0xFFFFFF );
+				grid.material.opacity = 0.2;
+				grid.material.transparent = true;
+				scene.add( grid );
+
+				// model
+				var loader = new FBXLoader();
+				loader.load( 'models/fbx/Thriller Part 2.fbx', function ( object ) {
+					mixer = new THREE.AnimationMixer( object );
+
+					action = mixer.clipAction( object.animations[ 0 ] );
+					action.play();
+
+					object.traverse( function ( child ) {
+						if ( child.isMesh ) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
+					} );
+					scene.add( object );
+				} );
+
+				loader.load( 'models/fbx/Gangnam Style.fbx', function ( object ) {
+					mixer2 = new THREE.AnimationMixer( object );
+					mixer2.setTime(20);
+
+					action2 = mixer2.clipAction( object.animations[ 0 ] );
+					
+					object.traverse( function ( child ) {
+						if ( child.isMesh ) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
+					} );
+					object.position.set(200, 0, 100);
+
+					scene.add( object );
+				} );
+
+				loader.load( 'models/fbx/Gangnam Style.fbx', function ( object ) {
+					mixer3 = new THREE.AnimationMixer( object );
+					mixer3.setTime(20);
+					action3 = mixer3.clipAction( object.animations[ 0 ] );
+					action3.syncWith(action2);
+
+					object.traverse( function ( child ) {
+						if ( child.isMesh ) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
+					} );
+					object.position.set(350, 0, 100);
+
+					scene.add( object );
+				} );
+
+				loader.load( 'models/fbx/Gangnam Style Mirror.fbx', function ( object ) {
+					mixer4 = new THREE.AnimationMixer( object );
+					mixer4.setTime(20);
+
+					action4 = mixer4.clipAction( object.animations[ 0 ] );
+					action4.syncWith(action3);
+
+					object.traverse( function ( child ) {
+						if ( child.isMesh ) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
+					} );
+					object.position.set(-200, 0, 100);
+
+					scene.add( object );
+				} );
+
+				loader.load( 'models/fbx/Gangnam Style Mirror.fbx', function ( object ) {
+					mixer5 = new THREE.AnimationMixer( object );
+					mixer5.setTime(20);
+					action5 = mixer5.clipAction( object.animations[ 0 ] );
+					action5.syncWith(action4);
+					action5.play();
+					action4.play();
+					action3.play();
+					action2.play();
+
+					object.traverse( function ( child ) {
+						if ( child.isMesh ) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
+					} );
+					object.position.set(-350, 0, 100);
+
+					scene.add( object );
+				} );
+
+				// wall
+				wall = createMesh(new THREE.CubeGeometry(650, 400, 5), "https://images.unsplash.com/photo-1559424452-eeb3a13ffe2b?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80");
+				wall.position.x = 0;
+				wall.position.y = 200;
+				wall.position.z = -65;
+				scene.add(wall);
+
+				var wallGeometry = new THREE.CubeGeometry(650, 400, 5);
+				var wallMaterial = new THREE.MeshPhongMaterial({color: 0x060008});
+				wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
+				wall2.castShadow = true;
+				wall2.position.x = 650;
+				wall2.position.y = 200;
+				wall2.position.z = -65;
+				scene.add(wall2);
+
+				wall3 = new THREE.Mesh(wallGeometry, wallMaterial);
+				wall3.castShadow = true;
+				wall3.position.x = -650;
+				wall3.position.y = 200;
+				wall3.position.z = -65;
+				scene.add(wall3);
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.shadowMap.enabled = true;
+				container.appendChild( renderer.domElement );
+
+				controls = new OrbitControls( camera, renderer.domElement );
+				controls.target.set( 0, 100, 0 );
+				controls.update();
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+				// stats
+				stats = new Stats();
+				container.appendChild( stats.dom );
+			}
+
+			function createMesh(geom, imageFile) {
+            var texture = new THREE.TextureLoader().load(imageFile);
+			texture.repeat.set( 1, 1 );
+            var mat = new THREE.MeshPhongMaterial();
+            mat.map = texture;
+
+            var mesh = new THREE.Mesh(geom, mat);
+            return mesh;
+        }
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+
+			function animate() {
+				requestAnimationFrame( animate );
+				var delta = clock.getDelta();
+
+				if (mixer) mixer.update(delta);
+				if (mixer2) mixer2.update(delta);
+				if (mixer3) mixer3.update(delta);
+				if (mixer4) mixer4.update(delta);
+				if (mixer5) mixer5.update(delta);
+
+				renderer.render( scene, camera );
+				stats.update();
+			}
+
+		</script>
+
+	</body>
+</html>
